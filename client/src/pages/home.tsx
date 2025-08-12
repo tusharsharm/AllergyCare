@@ -15,11 +15,15 @@ export default function Home() {
 
   const handleDoctorSelect = (doctor: Doctor) => {
     setSelectedDoctor(doctor);
+    setCurrentStep(2); // Move to calendar selection step
   };
 
   const handleDateTimeSelect = (date: string, time: string) => {
     setSelectedDate(date);
     setSelectedTime(time);
+    if (date && time) {
+      setCurrentStep(3); // Move to patient form step when both date and time are selected
+    }
   };
 
   const handlePatientDataSubmit = (data: Partial<InsertAppointment>) => {

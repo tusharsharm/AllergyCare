@@ -134,9 +134,13 @@ export function LocationSelector({ onLocationSelected, currentLocation }: Locati
         pincode
       };
 
-      // Save the location
+      // Save the location (optional, for analytics)
       try {
-        await apiRequest("/api/location", "POST", fullLocationData);
+        await fetch("/api/location", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(fullLocationData)
+        });
       } catch (saveError) {
         console.warn("Failed to save location:", saveError);
         // Continue even if saving fails
