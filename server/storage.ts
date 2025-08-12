@@ -142,7 +142,12 @@ export class MemStorage implements IStorage {
       ...insertAppointment,
       id,
       status: "confirmed",
-      createdAt: new Date()
+      createdAt: new Date(),
+      insurance: insertAppointment.insurance || null,
+      symptoms: insertAppointment.symptoms || null,
+      emergencyContactName: insertAppointment.emergencyContactName || null,
+      emergencyContactPhone: insertAppointment.emergencyContactPhone || null,
+      emergencyContactRelationship: insertAppointment.emergencyContactRelationship || null
     };
     this.appointments.set(id, appointment);
     
