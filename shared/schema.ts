@@ -9,12 +9,22 @@ export const doctors = pgTable("doctors", {
   lastName: text("last_name").notNull(),
   specialty: text("specialty").notNull(),
   clinic: text("clinic").notNull(),
-  location: text("location").notNull(),
-  distance: text("distance").notNull(),
+  address: text("address").notNull(),
+  city: text("city").notNull(),
+  state: text("state").notNull(),
+  pincode: text("pincode").notNull(),
+  latitude: text("latitude"),
+  longitude: text("longitude"),
+  phone: text("phone").notNull(),
+  experience: integer("experience").notNull(),
+  qualifications: text("qualifications").notNull(),
+  languages: json("languages").$type<string[]>().default([]),
+  consultationFee: integer("consultation_fee").notNull(),
   rating: integer("rating").notNull(),
   reviewCount: integer("review_count").notNull(),
-  initials: text("initials").notNull(),
-  avatarColor: text("avatar_color").notNull(),
+  isVerified: boolean("is_verified").notNull().default(false),
+  profileImage: text("profile_image"),
+  availability: json("availability").$type<{[key: string]: string[]}>().default({}),
 });
 
 export const appointments = pgTable("appointments", {
@@ -60,8 +70,27 @@ export const insertTimeSlotSchema = createInsertSchema(timeSlots).omit({
   id: true,
 });
 
+// Location schema for user location detection
+export const userLocation = pgTable("user_locations", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  latitude: text("latitude").notNull(),
+  longitude: text("longitude").notNull(),
+  city: text("city").notNull(),
+  state: text("state").notNull(),
+  country: text("country").notNull().default("India"),
+  pincode: text("pincode"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+});
+
+export const insertUserLocationSchema = createInsertSchema(userLocation).omit({
+  id: true,
+  createdAt: true,
+});
+
 export type InsertDoctor = z.infer<typeof insertDoctorSchema>;
 export type Doctor = typeof doctors.$inferSelect;
+export type InsertUserLocation = z.infer<typeof insertUserLocationSchema>;
+export type UserLocation = typeof userLocation.$inferSelect;
 export type InsertAppointment = z.infer<typeof insertAppointmentSchema>;
 export type Appointment = typeof appointments.$inferSelect;
 export type InsertTimeSlot = z.infer<typeof insertTimeSlotSchema>;
