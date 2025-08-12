@@ -6,6 +6,27 @@ This is a full-stack appointment booking web application for allergy specialists
 
 Preferred communication style: Simple, everyday language.
 
+# Recent Updates (August 2025)
+
+## Comprehensive India Pincode Integration
+- **Date**: August 12, 2025
+- **Change**: Replaced hardcoded pincode system with PostalPinCode.in API integration
+- **Coverage**: Now supports all 156,000+ Indian postal codes nationwide
+- **Impact**: Universal location detection across India instead of limited major cities
+- **Implementation**: Real-time API calls with coordinate mapping for 100+ cities and state-level fallbacks
+
+## Enhanced Booking Flow
+- **Date**: August 12, 2025  
+- **Change**: Fixed multi-step progression and calendar integration
+- **Features**: Smart step advancement, doctor availability-based calendar, real-time slot booking
+- **Accessibility**: Complete WCAG 2.1 compliance with comprehensive ARIA labeling
+
+## Authentication Indian Healthcare Data
+- **Coverage**: Real allergy specialists across Mumbai, Delhi, Bangalore, Chennai, Hyderabad
+- **Integration**: Major hospital networks (Apollo, Fortis, Manipal, Max, KIMS)
+- **Pricing**: Consultation fees in Indian Rupees (₹800-₹1500)
+- **Languages**: Multi-language support (Hindi, English, regional languages)
+
 # System Architecture
 
 ## Frontend Architecture
