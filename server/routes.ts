@@ -1,7 +1,7 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertAppointmentSchema } from "@shared/schema";
+import { insertAppointmentSchema, insertUserLocationSchema } from "@shared/schema";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -39,6 +39,52 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(doctor);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch doctor" });
+    }
+  });
+
+  // Get doctors by location
+  app.get("/api/doctors/location/:latitude/:longitude", async (req, res) => {
+    try {
+      const { latitude, longitude } = req.params;
+      const radius = req.query.radius ? parseInt(req.query.radius as string) : 50;
+      
+      const doctors = await storage.getDoctorsByLocation(latitude, longitude, radius);
+      res.json(doctors);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch doctors by location" });
+    }
+  });
+
+  // Detect location from pincode
+  app.get("/api/location/pincode/:pincode", async (req, res) => {
+    try {
+      const { pincode } = req.params;
+      const location = await storage.detectLocationFromPincode(pincode);
+      
+      if (!location) {
+        return res.status(404).json({ message: "Location not found for this pincode" });
+      }
+      
+      res.json(location);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to detect location" });
+    }
+  });
+
+  // Save user location
+  app.post("/api/location", async (req, res) => {
+    try {
+      const validatedData = insertUserLocationSchema.parse(req.body);
+      const location = await storage.saveUserLocation(validatedData);
+      res.status(201).json(location);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: "Invalid location data",
+          errors: error.errors 
+        });
+      }
+      res.status(500).json({ message: "Failed to save location" });
     }
   });
 

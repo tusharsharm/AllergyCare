@@ -95,6 +95,19 @@ export default function ReviewConfirmation({
     });
   };
 
+  const generateInitials = (firstName: string, lastName: string) => {
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
+  };
+
+  const generateAvatarColor = (name: string) => {
+    const colors = [
+      "#1565C0", "#2E7D32", "#E65100", "#5E35B1", 
+      "#C62828", "#00695C", "#EF6C00", "#1565C0"
+    ];
+    const index = name.charCodeAt(0) % colors.length;
+    return colors[index];
+  };
+
   return (
     <section className="mt-8" aria-labelledby="review-heading">
       <Card>
