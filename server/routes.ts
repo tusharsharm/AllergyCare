@@ -121,21 +121,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Detect location from pincode
-  app.get("/api/location/pincode/:pincode", async (req, res) => {
-    try {
-      const { pincode } = req.params;
-      const location = await storage.detectLocationFromPincode(pincode);
-      
-      if (!location) {
-        return res.status(404).json({ message: "Location not found for this pincode" });
-      }
-      
-      res.json(location);
-    } catch (error) {
-      res.status(500).json({ message: "Failed to detect location" });
-    }
-  });
+  // Note: The comprehensive pincode API is defined above, this old route is removed
 
   // Save user location
   app.post("/api/location", async (req, res) => {
