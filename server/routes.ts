@@ -4,6 +4,72 @@ import { storage } from "./storage";
 import { insertAppointmentSchema, insertUserLocationSchema } from "@shared/schema";
 import { z } from "zod";
 
+// Approximate coordinates for major Indian districts/cities
+function getApproximateCoordinates(district: string, state: string): { latitude: string, longitude: string } {
+  const locationMap: Record<string, { latitude: string, longitude: string }> = {
+    // Major cities and districts
+    "Mumbai": { latitude: "19.0760", longitude: "72.8777" },
+    "Delhi": { latitude: "28.7041", longitude: "77.1025" },
+    "Bangalore": { latitude: "12.9716", longitude: "77.5946" },
+    "Bengaluru": { latitude: "12.9716", longitude: "77.5946" },
+    "Chennai": { latitude: "13.0827", longitude: "80.2707" },
+    "Hyderabad": { latitude: "17.3850", longitude: "78.4867" },
+    "Pune": { latitude: "18.5204", longitude: "73.8567" },
+    "Kolkata": { latitude: "22.5726", longitude: "88.3639" },
+    "Ahmedabad": { latitude: "23.0225", longitude: "72.5714" },
+    "Surat": { latitude: "21.1702", longitude: "72.8311" },
+    "Jaipur": { latitude: "26.9124", longitude: "75.7873" },
+    "Lucknow": { latitude: "26.8467", longitude: "80.9462" },
+    "Kanpur": { latitude: "26.4499", longitude: "80.3319" },
+    "Nagpur": { latitude: "21.1458", longitude: "79.0882" },
+    "Indore": { latitude: "22.7196", longitude: "75.8577" },
+    "Patna": { latitude: "25.5941", longitude: "85.1376" },
+    "Ghaziabad": { latitude: "28.6692", longitude: "77.4538" },
+    "Agra": { latitude: "27.1767", longitude: "78.0081" },
+    "Varanasi": { latitude: "25.2677", longitude: "82.9739" },
+    "Meerut": { latitude: "28.9845", longitude: "77.7064" },
+    "Rajkot": { latitude: "22.3039", longitude: "70.8022" },
+    "Coimbatore": { latitude: "11.0168", longitude: "76.9558" },
+    "Jodhpur": { latitude: "26.2389", longitude: "73.0243" },
+    "Madurai": { latitude: "9.9252", longitude: "78.1198" },
+    "Gwalior": { latitude: "26.2183", longitude: "78.1828" },
+    "Vijayawada": { latitude: "16.5062", longitude: "80.6480" },
+    "Mysore": { latitude: "12.2958", longitude: "76.6394" },
+    "Bhopal": { latitude: "23.2599", longitude: "77.4126" },
+    "Salem": { latitude: "11.6643", longitude: "78.1460" },
+    "Warangal": { latitude: "17.9689", longitude: "79.5941" }
+  };
+
+  // Try exact district match first
+  if (locationMap[district]) {
+    return locationMap[district];
+  }
+
+  // State-based approximate locations
+  const stateApproximates: Record<string, { latitude: string, longitude: string }> = {
+    "Maharashtra": { latitude: "19.7515", longitude: "75.7139" },
+    "Karnataka": { latitude: "15.3173", longitude: "75.7139" },
+    "Tamil Nadu": { latitude: "11.1271", longitude: "78.6569" },
+    "Andhra Pradesh": { latitude: "15.9129", longitude: "79.7400" },
+    "Telangana": { latitude: "18.1124", longitude: "79.0193" },
+    "Kerala": { latitude: "10.8505", longitude: "76.2711" },
+    "Gujarat": { latitude: "22.2587", longitude: "71.1924" },
+    "Rajasthan": { latitude: "27.0238", longitude: "74.2179" },
+    "Madhya Pradesh": { latitude: "22.9734", longitude: "78.6569" },
+    "Uttar Pradesh": { latitude: "26.8467", longitude: "80.9462" },
+    "West Bengal": { latitude: "22.9868", longitude: "87.8550" },
+    "Bihar": { latitude: "25.0961", longitude: "85.3131" },
+    "Jharkhand": { latitude: "23.6102", longitude: "85.2799" },
+    "Odisha": { latitude: "20.9517", longitude: "85.0985" },
+    "Punjab": { latitude: "31.1471", longitude: "75.3412" },
+    "Haryana": { latitude: "29.0588", longitude: "76.0856" },
+    "Delhi": { latitude: "28.7041", longitude: "77.1025" },
+    "Assam": { latitude: "26.2006", longitude: "92.9376" }
+  };
+
+  return stateApproximates[state] || { latitude: "20.5937", longitude: "78.9629" };
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   // Get all doctors
   app.get("/api/doctors", async (req, res) => {
