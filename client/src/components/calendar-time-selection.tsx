@@ -45,7 +45,13 @@ export default function CalendarTimeSelection({
 
   const { data: timeSlots, isLoading: timeSlotsLoading } = useQuery<TimeSlot[]>({
     queryKey: ["/api/doctors", selectedDoctor?.id, "timeslots", selectedDate],
-    enabled: !!(selectedDoctor && selectedDate),
+    queryFn: async () => {
+      if (!selectedDoctor || !selectedDate) throw new Error("Missing doctor or date");
+      const response = await fetch(`/api/doctors/${selectedDoctor.id}/timeslots/${selectedDate}`);
+      if (!response.ok) throw new Error("Failed to fetch time slots");
+      return response.json();
+    },
+    enabled: !!(selectedDoctor && selectedDate && isActive),
   });
 
   const handleDateSelect = (date: Date) => {
@@ -69,7 +75,19 @@ export default function CalendarTimeSelection({
     // Don't allow past dates or weekends
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    return date >= today && date.getDay() !== 0 && date.getDay() !== 6;
+    
+    if (date < today || date.getDay() === 0 || date.getDay() === 6) {
+      return false;
+    }
+    
+    // Check if doctor has availability for this day
+    if (selectedDoctor?.availability) {
+      const dayName = date.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+      const dayAvailability = selectedDoctor.availability[dayName] || [];
+      return dayAvailability.length > 0;
+    }
+    
+    return true;
   };
 
   const isCurrentMonth = (date: Date) => {
