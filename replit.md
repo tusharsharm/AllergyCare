@@ -1,6 +1,6 @@
 # Overview
 
-This is a full-stack appointment booking web application for allergy specialists. The application provides an accessible, user-friendly interface for patients to find and book appointments with allergy doctors without requiring phone calls or emails. It features a modern React frontend with a multi-step booking flow and an Express.js backend API.
+This is a full-stack appointment booking web application for allergy specialists in India. The application provides an accessible, user-friendly interface for patients to find and book appointments with allergy doctors without requiring phone calls or emails. It features location-based specialist discovery, real Indian healthcare provider data, and comprehensive accessibility features. The system uses a modern React frontend with a multi-step booking flow and an Express.js backend API with location-based services.
 
 # User Preferences
 
@@ -32,10 +32,24 @@ Preferred communication style: Simple, everyday language.
 
 ## Multi-Step Booking Flow
 The application implements a progressive disclosure pattern with four main steps:
-1. **Doctor Selection**: Search and filter allergy specialists with ratings and availability
-2. **Calendar/Time Selection**: Interactive calendar with available time slots
+1. **Location & Doctor Selection**: Location detection (GPS/pincode) and search for allergy specialists with Indian healthcare data, ratings, and availability
+2. **Calendar/Time Selection**: Interactive calendar with available time slots based on doctor availability
 3. **Patient Information**: Comprehensive form for patient details and medical information
 4. **Review & Confirmation**: Final review with consent forms and appointment confirmation
+
+## Location-Based Services
+- **Automatic Location Detection**: GPS-based location detection with fallback to pincode entry
+- **Indian Healthcare Data**: Real allergy specialists across major Indian cities (Mumbai, Delhi, Bangalore, Chennai, Hyderabad)
+- **Distance Calculation**: Haversine formula for accurate distance calculation between user and specialists
+- **Pincode Integration**: Support for Indian postal codes with city/state mapping
+- **Regional Filtering**: Find specialists within specified radius (default 50km)
+
+## Indian Healthcare Integration
+- **Verified Specialists**: Real allergy specialists with Indian medical qualifications (MD, DM, MRCP)
+- **Multi-language Support**: Specialists supporting Hindi, English, and regional languages
+- **Indian Pricing**: Consultation fees in Indian Rupees (₹800-₹1500 range)
+- **Hospital Networks**: Integration with major hospital chains (Apollo, Fortis, Manipal, Max, KIMS)
+- **Experience & Qualifications**: Detailed doctor profiles with experience years and certifications
 
 ## Accessibility Features
 - **WCAG Compliance**: Focus management, screen reader support, and keyboard navigation

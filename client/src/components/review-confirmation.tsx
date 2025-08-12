@@ -10,7 +10,7 @@ import {
   Calendar, 
   Clock, 
   MapPin, 
-  DollarSign, 
+  IndianRupee, 
   CheckCircle, 
   Edit, 
   X, 
@@ -159,19 +159,20 @@ export default function ReviewConfirmation({
                     <MapPin className="h-5 w-5 text-primary mt-1" aria-hidden="true" />
                     <div>
                       <p className="font-medium text-gray-900">{selectedDoctor.clinic}</p>
-                      <p className="text-gray-600">{selectedDoctor.location}</p>
-                      <p className="text-gray-600">{selectedDoctor.distance}</p>
+                      <p className="text-gray-600">{selectedDoctor.address}</p>
+                      <p className="text-gray-600">{selectedDoctor.city}, {selectedDoctor.state} - {selectedDoctor.pincode}</p>
+                      <p className="text-sm text-gray-500">{selectedDoctor.phone}</p>
                     </div>
                   </div>
 
                   <div className="flex items-start space-x-3">
-                    <DollarSign className="h-5 w-5 text-primary mt-1" aria-hidden="true" />
+                    <IndianRupee className="h-5 w-5 text-primary mt-1" aria-hidden="true" />
                     <div>
-                      <p className="font-medium text-gray-900">Estimated Cost</p>
-                      <p className="text-gray-600">$150 - $200 (before insurance)</p>
+                      <p className="font-medium text-gray-900">Consultation Fee</p>
+                      <p className="text-gray-600">₹{selectedDoctor.consultationFee}</p>
                       <p className="text-sm text-success flex items-center">
                         <Check className="h-3 w-3 mr-1" />
-                        Your insurance may cover this visit
+                        {selectedDoctor.experience}+ years experience • {selectedDoctor.languages?.join(", ")}
                       </p>
                     </div>
                   </div>
