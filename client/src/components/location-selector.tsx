@@ -122,7 +122,10 @@ export function LocationSelector({ onLocationSelected, currentLocation }: Locati
       const response = await fetch(`/api/location/pincode/${pincode}`);
       
       if (!response.ok) {
-        throw new Error("Pincode not found");
+        if (response.status === 404) {
+          throw new Error("Pincode not found in our database. Please try a different pincode or use current location.");
+        }
+        throw new Error("Failed to detect location");
       }
       
       const locationData = await response.json();
@@ -132,17 +135,23 @@ export function LocationSelector({ onLocationSelected, currentLocation }: Locati
       };
 
       // Save the location
-      await apiRequest("/api/location", "POST", fullLocationData);
+      try {
+        await apiRequest("/api/location", "POST", fullLocationData);
+      } catch (saveError) {
+        console.warn("Failed to save location:", saveError);
+        // Continue even if saving fails
+      }
       
       onLocationSelected(fullLocationData);
       toast({
         title: "Location found",
         description: `Found specialists in ${locationData.city}, ${locationData.state}`
       });
-    } catch (error) {
+    } catch (error: any) {
+      console.error("Location detection error:", error);
       toast({
-        title: "Error",
-        description: "Unable to find location for this pincode. Please check and try again.",
+        title: "Location Error",
+        description: error.message || "Unable to find location for this pincode. Please check and try again.",
         variant: "destructive"
       });
     } finally {
